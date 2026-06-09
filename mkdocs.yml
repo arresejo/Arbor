@@ -1,0 +1,95 @@
+site_name: Arbor
+site_description: Toward Generalist Autonomous Research via Hypothesis-Tree Refinement
+site_url: https://RUC-NLPIR.github.io/Arbor/
+repo_url: https://github.com/RUC-NLPIR/Arbor
+repo_name: RUC-NLPIR/Arbor
+edit_uri: edit/main/docs/
+copyright: Renmin University of China · Microsoft Research
+
+theme:
+  name: material
+  logo: assets/logo_black.png
+  favicon: assets/logo_black.png
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - navigation.indexes
+    - toc.follow
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - search.suggest
+    - search.highlight
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: installation.md
+      - Quickstart: quickstart.md
+      - Preparing a Benchmark: preparing-a-benchmark.md
+  - Concepts:
+      - How It Works: how-it-works.md
+  - Guides:
+      - Configuration: configuration.md
+      - Interaction Modes: interaction-modes.md
+      - Web UI & Monitoring: web-ui.md
+      - Plugins: plugins.md
+      - Skills: skills.md
+      - Outputs & Resume: outputs-and-resume.md
+  - Reference:
+      - CLI: cli.md
+  - Contributing: contributing.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - def_list
+  - tables
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+plugins:
+  - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/RUC-NLPIR/Arbor

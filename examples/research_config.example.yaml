@@ -1,0 +1,73 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# AutoResearch — example config
+#
+# Run:  coordinator --config research_config.example.yaml --cwd ./your-project \
+#                  --task "Improve validation accuracy"
+#
+# Only the `llm:` block is usually needed to get started — everything else has
+# sensible defaults. Flat keys (e.g. `model:` at top level) also work; the
+# nested form below is just clearer.
+# ─────────────────────────────────────────────────────────────────────────────
+
+llm:
+  # The API type configured by `arbor setup` uses the same provider names:
+  #   anthropic        — native Anthropic Messages API (thinking + caching)
+  #   openai           — native OpenAI Responses API by default
+  #   litellm          — unified transport for every chat model / proxy
+
+  provider: anthropic
+  model: claude-sonnet-4-20250514
+  # api_key:                           # omit to read ANTHROPIC_API_KEY /
+  #                                    # OPENAI_API_KEY from the environment,
+  #                                    # or paste the key here / pass --api-key
+  # base_url:                          # set for proxies / vLLM / Ollama
+  reasoning_effort: high               # low | medium | high | none
+
+  # meta_model:                        # optional: a different model for the
+  #                                    # orchestrator than for executors
+
+# ── Loop / budget (optional — defaults are generous) ─────────────────────────
+# Orchestration knobs are top-level keys (not nested).
+max_cycles: 20
+executor_max_turns: 50
+
+timeout:                  # `timeout:` IS a real nested group
+  executor: 172800        # 48h
+  run_training_max: 604800  # 7d
+
+# ── Human-in-the-loop / observability (optional) ─────────────────────────────
+ui:
+  interaction_mode: auto  # auto | direction | review | collaborative
+  # webui_port: 8765       # set to expose the read-only WebUI
+
+# ─────────────────────────────────────────────────────────────────────────────
+# More LLM examples — copy the one you need into `llm:` above.
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# OpenAI gpt-5 with the reasoning chain preserved (Responses API):
+#   provider: openai
+#   model: gpt-5.5
+#   reasoning_effort: high             # api_key from OPENAI_API_KEY env
+#
+# DeepSeek-R1 (litellm; reasoning_content carried back automatically):
+#   provider: litellm
+#   model: deepseek/deepseek-reasoner  # api_key from DEEPSEEK_API_KEY env
+#
+# Self-hosted vLLM / Ollama (chat-only endpoint):
+#   provider: openai
+#   model: Qwen/Qwen2.5-72B-Instruct
+#   base_url: http://localhost:8000/v1
+#   api_key: dummy
+#   openai_api: chat
+#
+# A litellm proxy serving gpt-5.5 (chain via Responses):
+#   provider: openai
+#   model: gpt-5.5
+#   base_url: http://your-litellm-proxy/v1
+#   api_key: sk-...
+#
+# A Copilot-style proxy serving claude / gemini (chain via litellm opaque token):
+#   provider: litellm                  # or auto
+#   model: gemini-3.1-pro-preview
+#   base_url: http://localhost:4141/v1
+#   api_key: dummy

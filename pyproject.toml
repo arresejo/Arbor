@@ -1,0 +1,66 @@
+[project]
+name = "research-agent"
+version = "0.1.0"
+description = "Arbor — an autonomous research agent that proposes ideas, edits code, runs experiments, and iterates on a hypothesis tree."
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["ai", "agent", "autonomous-research", "llm", "experimentation"]
+dependencies = [
+    "anthropic>=0.52.0",
+    "openai>=1.30.0",
+    "litellm>=1.55.0",
+    "tiktoken>=0.7.0",
+    "typer>=0.12.0",
+    "rich>=13.0",
+    "pyyaml>=6.0",
+    "prompt-toolkit>=3.0",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+]
+
+[project.optional-dependencies]
+docs = [
+    "mkdocs-material>=9.5",
+]
+
+[project.scripts]
+arbor = "research_agent.cli.app:main"
+executor = "research_agent.executor.main:cli"
+coordinator = "research_agent.coordinator.main:cli"
+run-research = "research_agent.run:cli"
+review-research = "research_agent.review:cli"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+# The code lives in `src/` on disk but is imported as the `research_agent`
+# package, so we map the package root with `package-dir` and list the
+# sub-packages explicitly (auto-discovery can't rename `src/` -> the import
+# name). Add new sub-packages here when you create them.
+[tool.setuptools]
+package-dir = { "research_agent" = "src" }
+packages = [
+    "research_agent",
+    "research_agent.cli",
+    "research_agent.cli.commands",
+    "research_agent.cli.intake",
+    "research_agent.coordinator",
+    "research_agent.coordinator.tools",
+    "research_agent.core",
+    "research_agent.core.llm",
+    "research_agent.core.tools",
+    "research_agent.core.tools.web",
+    "research_agent.events",
+    "research_agent.events.subscribers",
+    "research_agent.executor",
+    "research_agent.plugins",
+    "research_agent.report",
+    "research_agent.search_agent",
+    "research_agent.webui",
+]
+
+[tool.setuptools.package-data]
+"research_agent" = ["skills/*.md"]
+"research_agent.webui" = ["index.html"]
+"research_agent.plugins" = ["*.yaml", "*.yml"]

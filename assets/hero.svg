@@ -58,8 +58,8 @@
       }
       @keyframes sweep {
         0%   { transform: translateX(-360px) rotate(-18deg); }
-        22%  { transform: translateX(560px)  rotate(-18deg); }
-        100% { transform: translateX(560px)  rotate(-18deg); }
+        30%  { transform: translateX(1000px) rotate(-18deg); }
+        100% { transform: translateX(1000px) rotate(-18deg); }
       }
 
       .pulse  { animation: pulse 4s ease-in-out infinite; }

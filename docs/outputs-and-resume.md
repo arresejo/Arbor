@@ -15,7 +15,15 @@ Each run gets its own session directory, by default under the target project:
 whole directory with `--workspace-dir`.
 
 Inside you'll find the run's checkpoint (Idea Tree + message history), logs, and the
-final report.
+final report. The exact instruction you launched with is recorded in the session log, and
+the fully-resolved settings for the run are saved to
+`<run_name>/.coordinator/config_snapshot.yaml` (every config layer merged, secrets
+redacted).
+
+!!! tip "Reuse a setup"
+    To repeat a study with the same settings in a fresh run, copy that
+    `config_snapshot.yaml` to your project root as `arbor.yaml` — Arbor auto-loads it next
+    time. See [Preparing a Benchmark → Saving and reusing a setup](preparing-a-benchmark.md#saving-and-reusing-a-setup).
 
 ## `REPORT.md`
 

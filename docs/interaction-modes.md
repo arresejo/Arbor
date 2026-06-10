@@ -30,7 +30,7 @@ ui:
 ```
 
 As always, the CLI flag overrides the config value. See
-[Configuration → Where configuration comes from](configuration.md#where-configuration-comes-from).
+[Configuration → When settings disagree: precedence](configuration.md#when-settings-disagree-precedence).
 
 ## What a gate looks like
 

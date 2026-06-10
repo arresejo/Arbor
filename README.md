@@ -41,6 +41,18 @@ Arbor runs **two cooperating agents**:
 <tr><td><b>Steer &amp; adapt</b></td><td>A live terminal dashboard and read-only WebUI, optional human-in-the-loop at ideation/review, and one-line domain plugins — no code changes.</td></tr>
 </table>
 
+## Demo
+
+<p align="center">
+  <video src="https://raw.githubusercontent.com/RUC-NLPIR/Arbor/main/assets/demo.mp4" controls muted width="100%"></video>
+</p>
+
+<p align="center">
+  <i>Arbor running a full research loop — proposing hypotheses, editing code, running experiments, and merging held-out wins.</i>
+  <br>
+  If the video does not play inline, <a href="assets/demo.mp4">download it</a> or <a href="https://RUC-NLPIR.github.io/Arbor/#demo">watch it on the project page</a>.
+</p>
+
 ## CLI And Skill Versions
 
 This repository includes two ways to use Arbor:

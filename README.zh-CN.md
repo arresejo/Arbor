@@ -40,6 +40,18 @@ Arbor 由**两个协作智能体**组成：
 <tr><td><b>易于引导和适配</b></td><td>实时终端仪表盘、只读 WebUI、构思/审阅阶段可选的人在回路，以及一行即可切换的领域插件，无需改代码。</td></tr>
 </table>
 
+## 演示
+
+<p align="center">
+  <video src="https://raw.githubusercontent.com/RUC-NLPIR/Arbor/main/assets/demo.mp4" controls muted width="100%"></video>
+</p>
+
+<p align="center">
+  <i>Arbor 跑一次完整的研究循环——提出假设、改代码、跑实验，并把留出集上验证有效的改进合并回假设树。</i>
+  <br>
+  如果视频无法内嵌播放，可<a href="assets/demo.mp4">下载查看</a>，或在<a href="https://RUC-NLPIR.github.io/Arbor/#demo">项目主页</a>观看。
+</p>
+
 ## CLI 版与 Skill 版
 
 本仓库提供两种 Arbor 使用方式：

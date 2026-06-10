@@ -1,5 +1,6 @@
 import Threads from '../bits/Threads.jsx';
 import Magnet from '../bits/Magnet.jsx';
+import RotatingText from '../bits/RotatingText.jsx';
 import Reveal from '../components/Reveal.jsx';
 import ErrorBoundary from '../components/ErrorBoundary.jsx';
 import { useReducedMotion } from '../components/useReducedMotion';
@@ -33,6 +34,20 @@ export default function Hero() {
           />
         </h1>
 
+        <div className="hero-rotate" aria-label="Optimize anything">
+          <span className="hero-rotate-pre">Optimize</span>
+          <RotatingText
+            texts={['anything', 'ML models', 'data pipelines', 'hypotheses', 'Kaggle scores', 'research']}
+            mainClassName="hero-rotate-word"
+            splitLevelClassName="hero-rotate-split"
+            staggerFrom="last"
+            staggerDuration={0.025}
+            rotationInterval={2200}
+            auto={!reduced}
+            transition={{ type: 'spring', damping: 26, stiffness: 320 }}
+          />
+        </div>
+
         <Reveal delay={0.15} distance={26}>
           <p className="hero-title">
             Toward Generalist Autonomous Research via{' '}
@@ -61,7 +76,7 @@ export default function Hero() {
               </a>
             </Magnet>
             <Magnet padding={70} magnetStrength={4}>
-              <a className="btn" href="#demo">
+              <a className="btn" href="#case">
                 <IconPlay /> Live Demo
               </a>
             </Magnet>

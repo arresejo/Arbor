@@ -1,5 +1,6 @@
 import SpotlightCard from '../bits/SpotlightCard.jsx';
 import Reveal from '../components/Reveal.jsx';
+import IdeaTree from '../components/IdeaTree.jsx';
 
 // Held-out (test) accuracy on BrowseComp — matches the paper's main results table.
 const AXIS_MAX = 80;
@@ -67,22 +68,7 @@ export default function CaseStudy() {
           </div>
         </Reveal>
 
-        <Reveal delay={0.1}>
-          <div className="case-explore">
-            <span className="case-explore-meta">
-              Explore a full BrowseComp run — node scores, merge decisions, and per-experiment
-              evidence preserved end to end.
-            </span>
-            <span className="case-explore-links">
-              <a className="case-link" href="assets/demo/browsecomp/dashboard.html" target="_blank" rel="noreferrer">
-                Open dashboard <span aria-hidden="true">↗</span>
-              </a>
-              <a className="case-link" href="assets/demo/browsecomp/idea_tree.html" target="_blank" rel="noreferrer">
-                Open idea tree <span aria-hidden="true">↗</span>
-              </a>
-            </span>
-          </div>
-        </Reveal>
+        <IdeaTree />
 
         <Reveal delay={0.05}>
           <div className="findings">

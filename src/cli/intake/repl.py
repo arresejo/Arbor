@@ -540,9 +540,23 @@ def _handle_slash(
         # shared state and the main loop returns it from run_intake.
         from ..resume_picker import find_resumable_sessions, prompt_resume_choice
 
-        sessions = find_resumable_sessions(starting_cwd) if starting_cwd else []
+        sessions = (
+            find_resumable_sessions(starting_cwd, include_subdirs=True)
+            if starting_cwd else []
+        )
         if not sessions:
-            _console.print("[dim]no resumable runs found in this project[/dim]")
+            where = escape(str(starting_cwd)) if starting_cwd else "this directory"
+            _console.print(
+                f"[yellow]No resumable runs found[/] under [dim]{where}[/]."
+            )
+            _console.print(
+                "  [dim]Resume is per-project: runs live in "
+                "[/dim][cyan].arbor/sessions/[/cyan][dim] under the project you "
+                "worked on.\n"
+                "  Launch [/dim][cyan]arbor[/cyan][dim] from inside (or just "
+                "above) that project, or start a new run by describing your "
+                "goal.[/dim]"
+            )
             return "continue"
         chosen = prompt_resume_choice(sessions, console=_console)
         if chosen is None:

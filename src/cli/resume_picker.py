@@ -40,14 +40,42 @@ class ResumableSession:
     task: str
 
 
-def find_resumable_sessions(cwd: Path) -> list[ResumableSession]:
+def find_resumable_sessions(cwd: Path, *, include_subdirs: bool = False) -> list[ResumableSession]:
     """Return resumable sessions under ``<cwd>/.arbor/sessions``, newest first.
 
     A session is resumable iff it has a readable ``.coordinator/checkpoint.json``.
     Completed runs (those that wrote ``run_stats.json``) are included too — they
     can be resumed to push further — and tagged ``completed``.
+
+    When ``include_subdirs`` is set and the launch dir itself has no sessions,
+    we scan one level of immediate subdirectories too. Runs live under the
+    *target project* dir (which intake may have redirected to), so a user who
+    launched ``arbor`` from a parent folder would otherwise see nothing.
     """
-    base = Path(cwd) / CONFIG_DIR_NAME / "sessions"
+    sessions = _scan_dir(Path(cwd))
+    if not sessions and include_subdirs:
+        for child in _safe_iterdir(Path(cwd)):
+            if child.is_dir() and not child.name.startswith("."):
+                sessions.extend(_scan_dir(child))
+
+    # Newest first. Sessions without a parseable timestamp sort last.
+    sessions.sort(
+        key=lambda s: (s.created_at is not None, s.created_at or datetime.min.replace(tzinfo=timezone.utc)),
+        reverse=True,
+    )
+    return sessions
+
+
+def _safe_iterdir(path: Path) -> list[Path]:
+    try:
+        return sorted(path.iterdir())
+    except OSError:
+        return []
+
+
+def _scan_dir(cwd: Path) -> list[ResumableSession]:
+    """Collect resumable sessions directly under ``<cwd>/.arbor/sessions`` (unsorted)."""
+    base = cwd / CONFIG_DIR_NAME / "sessions"
     if not base.is_dir():
         return []
 
@@ -94,11 +122,6 @@ def find_resumable_sessions(cwd: Path) -> list[ResumableSession]:
             task=task,
         ))
 
-    # Newest first. Sessions without a parseable timestamp sort last.
-    sessions.sort(
-        key=lambda s: (s.created_at is not None, s.created_at or datetime.min.replace(tzinfo=timezone.utc)),
-        reverse=True,
-    )
     return sessions
 
 
@@ -107,7 +130,7 @@ def prompt_resume_choice(sessions: list[ResumableSession], *, console: Any) -> R
     import typer
 
     console.print()
-    console.print(f"[bold cyan]Found {len(sessions)} previous run(s)[/] in this project:\n")
+    console.print(f"[bold cyan]Found {len(sessions)} previous run(s)[/] you can resume:\n")
     for i, s in enumerate(sessions, 1):
         console.print(_format_row(i, s))
     console.print()
@@ -137,9 +160,11 @@ def _format_row(idx: int, s: ResumableSession) -> str:
     best = f"best {s.best_score:.4f}" if s.best_score is not None else "best —"
     nodes = f"{s.total_nodes} idea(s)" if s.total_nodes is not None else "—"
     task = escape(_short(s.task, 60))
+    project = escape(_short(str(s.cwd), 70))
     return (
         f"  [bold]{idx}[/]  [cyan]{escape(s.run_name)}[/]  [dim]{age}[/]  "
         f"{escape(s.phase)} · cycle {s.cycle_num}  [dim]{best} · {nodes}[/]  {tag}\n"
+        f"      [dim]{project}[/]\n"
         f"      [dim]{task}[/]"
     )
 

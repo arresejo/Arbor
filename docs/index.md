@@ -5,9 +5,7 @@ hide:
 
 # Arbor
 
-<p align="center" markdown>
-  *Toward Generalist Autonomous Research via Hypothesis-Tree Refinement*
-</p>
+*Toward Generalist Autonomous Research via Hypothesis-Tree Refinement*
 
 **Arbor is an autonomous research agent that turns a long-horizon objective into a
 cumulative search.** Give it a benchmark and a goal; it proposes hypotheses, edits code,

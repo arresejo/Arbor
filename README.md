@@ -260,10 +260,16 @@ pollutes the Coordinator's context. See [`docs/`](docs/index.md) for the full me
 ## ⚙️ Configuration
 
 LLM access is configured once with `arbor setup` (stored in `~/.arbor/config.yaml`) via a
-single `provider` field — `anthropic` for the official Anthropic Claude API, `openai` for
-the official OpenAI API, or `litellm` for every other compatible provider, proxy, or local
-gateway. Use `litellm` for third-party services even when they expose OpenAI- or
-Claude-shaped APIs; for example, DeepSeek should be configured through `litellm`. Keys come
+single `provider` field:
+
+| `provider` | Use it for |
+| --- | --- |
+| `auto` *(default)* | Let Arbor pick. It probes your endpoint's OpenAI **Responses** API and uses it when available (reasoning chain preserved), otherwise falls back to chat completions; Claude models use the native Anthropic API. The detected backend is frozen into the config. |
+| `openai-responses` | OpenAI / o-series models via the Responses API (encrypted reasoning chain preserved across turns). |
+| `openai-chat` | Any OpenAI-compatible chat-completions endpoint — DeepSeek / Qwen / GLM / vLLM / Ollama / local gateways. |
+| `anthropic` | Claude via the native Anthropic Messages API (signed thinking + prompt caching). |
+
+Most users just run `arbor setup`, keep `auto`, and fill in `model` + `base_url`. Keys come
 from the environment or the config; per-project task and budget settings live in
 `research_config.yaml`. See the
 [configuration guide](https://RUC-NLPIR.github.io/Arbor/docs/configuration/) and

@@ -199,7 +199,7 @@ ROOT（基线：20%）
 
 ## ⚙️ 配置
 
-通过 `arbor setup` 一次性配置 LLM 访问（存储在 `~/.arbor/config.yaml`），只需填写一个 `provider` 字段——`anthropic`、`openai`（包含任何 OpenAI 兼容的 Responses 端点），或 `litellm`（用于 DeepSeek / Gemini / Qwen / vLLM / Ollama / 本地网关）。API 密钥从环境变量或配置文件中读取；针对具体项目的任务和预算配置则放在 `research_config.yaml` 中。详情请参阅[配置指南](https://ruc-nlpir.github.io/Arbor/docs/configuration/)和 [`examples/research_config.example.yaml`](https://claude.ai/chat/examples/research_config.example.yaml)。
+通过 `arbor setup` 一次性配置 LLM 访问（存储在 `~/.arbor/config.yaml`），只需填写一个 `provider` 字段——`anthropic` 用于官方 Anthropic Claude API，`openai` 用于官方 OpenAI API，`litellm` 用于其他所有兼容 provider、代理或本地网关。即使第三方服务提供 OpenAI 或 Claude 格式的接口，也应通过 `litellm` 配置；例如 DeepSeek 应使用 `litellm`。API 密钥从环境变量或配置文件中读取；针对具体项目的任务和预算配置则放在 `research_config.yaml` 中。详情请参阅[配置指南](https://ruc-nlpir.github.io/Arbor/docs/configuration/)和 [`examples/research_config.example.yaml`](https://claude.ai/chat/examples/research_config.example.yaml)。
 
 ------
 

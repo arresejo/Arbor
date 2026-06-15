@@ -260,9 +260,11 @@ pollutes the Coordinator's context. See [`docs/`](docs/index.md) for the full me
 ## ⚙️ Configuration
 
 LLM access is configured once with `arbor setup` (stored in `~/.arbor/config.yaml`) via a
-single `provider` field — `anthropic`, `openai` (incl. any OpenAI-compatible Responses
-endpoint), or `litellm` for DeepSeek / Gemini / Qwen / vLLM / Ollama / local gateways. Keys
-come from the environment or the config; per-project task and budget settings live in
+single `provider` field — `anthropic` for the official Anthropic Claude API, `openai` for
+the official OpenAI API, or `litellm` for every other compatible provider, proxy, or local
+gateway. Use `litellm` for third-party services even when they expose OpenAI- or
+Claude-shaped APIs; for example, DeepSeek should be configured through `litellm`. Keys come
+from the environment or the config; per-project task and budget settings live in
 `research_config.yaml`. See the
 [configuration guide](https://RUC-NLPIR.github.io/Arbor/docs/configuration/) and
 [`examples/research_config.example.yaml`](examples/research_config.example.yaml) for every

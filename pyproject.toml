@@ -1,12 +1,13 @@
 [project]
-name = "arbor"
-version = "0.1.0"
+name = "arbor-agent"
+dynamic = ["version"]
 description = "Arbor — an autonomous research agent that proposes ideas, edits code, runs experiments, and iterates on a hypothesis tree."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 keywords = ["ai", "agent", "autonomous-research", "llm", "experimentation"]
+authors = [{ name = "Jiajie Jin", email = "jinjiajie@ruc.edu.cn" }]
 dependencies = [
     "anthropic>=0.52.0",
     "openai>=1.30.0",
@@ -19,6 +20,11 @@ dependencies = [
     "pydantic>=2.0",
     "pydantic-settings>=2.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/RUC-NLPIR/Arbor"
+Repository = "https://github.com/RUC-NLPIR/Arbor"
+Issues = "https://github.com/RUC-NLPIR/Arbor/issues"
 
 [project.optional-dependencies]
 docs = [
@@ -34,8 +40,15 @@ run-research = "arbor.run:cli"
 review-research = "arbor.review:cli"
 
 [build-system]
-requires = ["setuptools>=77.0"]
+requires = ["setuptools>=77.0", "setuptools-scm>=8.0"]
 build-backend = "setuptools.build_meta"
+
+# Version is derived automatically from the latest git tag (e.g. tag
+# `v0.2.0` -> version `0.2.0`). Never hard-code `version` here again; just
+# push a `v*` tag and CI publishes that version. `fallback_version` is only
+# used for local builds when no tag/git history is available.
+[tool.setuptools_scm]
+fallback_version = "0.1.0"
 
 # The code lives in `src/` on disk but is imported as the `arbor`
 # package, so we map the package root with `package-dir` and list the

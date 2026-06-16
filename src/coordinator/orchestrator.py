@@ -9,6 +9,7 @@ memory across context compressions.
 from __future__ import annotations
 
 import asyncio
+import copy
 import hashlib
 import json
 import logging
@@ -58,10 +59,11 @@ def _resume_pending_user_note(pending_user: dict[str, Any] | None) -> str:
         return ""
     node_id = str(pending_user.get("node_id") or "").strip()
     scope = f" (about node {node_id})" if node_id else ""
+    quoted = question.replace("\n", "\n> ")  # keep every line inside the blockquote
     return (
         "## Pending question to the user\n\n"
         f"When the run was interrupted you were waiting for the user's answer{scope} to:\n"
-        f"> {question}\n\n"
+        f"> {quoted}\n\n"
         "Their answer was not received. If you still need it, ask again with "
         "AskUser before proceeding; otherwise continue."
     )
@@ -330,6 +332,10 @@ class CoordinatorOrchestrator:
             if replayed:
                 agent.messages.extend(seal_interrupted_tail(replayed))
                 self._append_resume_nudge(agent, self._build_resume_prompt())
+                # The pending question is now in the replayed message history;
+                # drop the live copy so it isn't re-persisted and re-surfaced on
+                # every subsequent resume (a ghost question that never clears).
+                self._pending_user = None
                 resumed = True
                 _print_status(
                     f"Resumed {len(replayed)} prior message(s) from checkpoint."
@@ -809,7 +815,8 @@ class CoordinatorOrchestrator:
             # Restore a suspended human-in-the-loop question so the resumed run
             # knows it was paused mid-question (surfaced in the resume prompt).
             if self._resume_checkpoint is not None:
-                self._pending_user = self._resume_checkpoint.pending_user
+                pending = self._resume_checkpoint.pending_user
+                self._pending_user = copy.deepcopy(pending) if pending else None
                 if self._pending_user:
                     _print_status(
                         "  Restored a pending user question from the checkpoint"
@@ -916,7 +923,6 @@ class CoordinatorOrchestrator:
 
     def _on_await_user(self, event: Any) -> None:
         """Record the live ask-back so a checkpoint can capture it (#10 → #1)."""
-        import copy
         self._pending_user = copy.deepcopy(dict(getattr(event, "data", None) or {}))
 
     def _on_user_reply(self, event: Any) -> None:

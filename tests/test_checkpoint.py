@@ -92,6 +92,13 @@ def test_from_dict_invalid_version_raises() -> None:
         Checkpoint.from_dict(data)
 
 
+def test_from_dict_accepts_missing_version() -> None:
+    # An unversioned dict is treated as compatible (backward compat).
+    data = _sample_checkpoint().to_dict()
+    del data["schema_version"]
+    assert Checkpoint.from_dict(data).run_name == "demo"
+
+
 # ── Message history round-trip ───────────────────────────────────────
 
 def test_messages_round_trip(tmp_path) -> None:
@@ -152,6 +159,21 @@ def test_seal_noop_when_assistant_has_no_tool_use() -> None:
         {"role": "assistant", "content": [{"type": "text", "text": "done"}]},
     ]
     assert seal_interrupted_tail(msgs) is msgs
+
+
+def test_seal_answers_every_dangling_tool_use() -> None:
+    msgs = [
+        {"role": "user", "content": "go"},
+        {"role": "assistant", "content": [
+            {"type": "tool_use", "id": "t1", "name": "RunExecutor", "input": {}},
+            {"type": "text", "text": "and also"},
+            {"type": "tool_use", "id": "t2", "name": "SearchIdea", "input": {}},
+        ]},
+    ]
+    results = seal_interrupted_tail(msgs)[-1]["content"]
+    ids = [r["tool_use_id"] for r in results]
+    assert ids == ["t1", "t2"]
+    assert all(r["is_error"] for r in results)
 
 
 def test_seal_empty() -> None:

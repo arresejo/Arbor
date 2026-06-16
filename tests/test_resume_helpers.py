@@ -28,3 +28,12 @@ def test_pending_note_without_node_scope() -> None:
     note = _resume_pending_user_note({"prompt": "Proceed with plan B?", "node_id": ""})
     assert "Proceed with plan B?" in note
     assert "node" not in note.split(">")[0]  # no node scope in the lead-in
+
+
+def test_pending_note_quotes_every_line() -> None:
+    note = _resume_pending_user_note(
+        {"prompt": "Which split?\nGive the full path.", "node_id": ""}
+    )
+    # Both lines stay inside the markdown blockquote.
+    assert "> Which split?" in note
+    assert "> Give the full path." in note

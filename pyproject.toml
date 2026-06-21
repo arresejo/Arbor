@@ -32,6 +32,12 @@ docs = [
     "mkdocs-material>=9.5",
     "mkdocs-static-i18n>=1.2",
 ]
+# `arbor mcp` (run Arbor's deterministic tools as an MCP server for a host
+# coding agent). Kept optional so the base install stays lean — install with
+# `pip install arbor-agent[mcp]`.
+mcp = [
+    "mcp>=1.2.0",
+]
 
 [project.scripts]
 arbor = "arbor.cli.app:main"
@@ -71,6 +77,7 @@ packages = [
     "arbor.events",
     "arbor.events.subscribers",
     "arbor.executor",
+    "arbor.mcp",
     "arbor.plugins",
     "arbor.report",
     "arbor.search_agent",

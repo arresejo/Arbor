@@ -14,7 +14,7 @@ from .commands.export_cmd import export_command
 from .commands.replay_cmd import replay_command
 from .commands.config_cmd import config_app
 from .commands.doctor_cmd import doctor_command
-from .commands.setup_cmd import setup_command
+from .commands.setup_cmd import setup_command, quickstart_command
 
 
 # We don't use a Typer.callback() default because that would shadow flag
@@ -39,6 +39,7 @@ app.command("export")(export_command)
 app.command("replay")(replay_command)
 app.command("doctor")(doctor_command)
 app.command("setup")(setup_command)
+app.command("quickstart")(quickstart_command)
 app.add_typer(config_app, name="config")
 
 
@@ -53,7 +54,7 @@ def version_command() -> None:
     typer.echo(f"{APP_NAME} {ver}")
 
 
-_KNOWN_COMMANDS = {"run", "report", "export", "replay", "config", "version", "doctor", "setup"}
+_KNOWN_COMMANDS = {"run", "report", "export", "replay", "config", "version", "doctor", "setup", "quickstart"}
 _ROOT_FLAGS = {"--help", "-h"}
 _VERSION_FLAGS = {"--version", "-V"}
 

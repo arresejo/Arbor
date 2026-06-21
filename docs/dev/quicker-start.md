@@ -41,9 +41,13 @@ a big build — and the recording doubles as the shareable/viral artifact.
   committed, reproducible script and clearly labelled as an illustrative sample
   (no benchmarked-result claims from synthetic scores).
 
-### 2. Free-tier quickstart (follow-up PR)
-- Surface a "use a free key (Gemini/Groq free tier)" fast path in `arbor setup`
-  / a `arbor quickstart` entry, so step 2 of the ladder is free, not paid.
+### 2. Free-tier quickstart (done)
+- `cli/quickstart.py` — curated easy-start presets (Gemini / Groq free keys,
+  Ollama local) mapping onto the `openai-chat` backend, plus a pure
+  `build_llm_from_preset` for testability.
+- `arbor setup` now leads with a "How do you want to connect a model?" menu —
+  free/local first, "set it up myself" falls through to the full prompts.
+- `arbor quickstart` — discoverable alias that lands on the same easy-start menu.
 
 ### 3. Real recorded demo (follow-up)
 - Replace the synthetic sample with a recording of a real AlgoTune-knn run once a

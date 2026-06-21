@@ -24,7 +24,6 @@ import urllib.parse
 import webbrowser
 from dataclasses import asdict, dataclass
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from pathlib import Path
 from typing import Any
 
 import httpx

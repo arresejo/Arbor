@@ -252,6 +252,9 @@ class _Handler(BaseHTTPRequestHandler):
             length = int(self.headers.get("Content-Length") or 0)
         except ValueError:
             length = 0
+        # Cap the body: a localhost client should never need more than a small
+        # JSON control message, and an unbounded Content-Length could OOM us.
+        length = min(length, 64 * 1024)
         raw = self.rfile.read(length) if length > 0 else b""
         try:
             msg = json.loads(raw or b"{}")
@@ -276,6 +279,9 @@ class _Handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
+        # Harden the one HTML response: no MIME sniffing, no framing (clickjacking).
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("X-Frame-Options", "DENY")
         self.end_headers()
         self.wfile.write(body)
 
@@ -301,8 +307,9 @@ class _Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "text/event-stream")
         self.send_header("Cache-Control", "no-cache")
         self.send_header("Connection", "keep-alive")
-        # Safe: the server only binds 127.0.0.1 and is strictly read-only.
-        self.send_header("Access-Control-Allow-Origin", "*")
+        # No CORS header: the browser page is served from this same origin, so its
+        # EventSource doesn't need one — and dropping the previous wildcard stops
+        # any other local page from reading the session stream cross-origin.
         self.end_headers()
         q = webui.broadcast.register()
         try:

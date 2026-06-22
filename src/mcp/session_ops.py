@@ -66,9 +66,22 @@ _SCORE_PATTERNS = [
 # ── Session path helpers ──────────────────────────────────────────────────────
 
 
+def _safe_run_name(run_name: str) -> str:
+    """Reduce a tool-supplied ``run_name`` to a single safe path component.
+
+    The MCP tools take ``run_name`` from the host agent, so a value like
+    ``../../etc`` or ``/abs/path`` must not let the session path escape
+    ``<cwd>/.arbor/sessions/``. We map anything outside ``[A-Za-z0-9_.-]`` to
+    ``-`` (this also neutralises ``/`` and ``\\``, so an absolute path can't reset
+    the join) and strip leading dots so the result can never be ``.`` or ``..``.
+    """
+    safe = re.sub(r"[^A-Za-z0-9_.-]+", "-", str(run_name)).lstrip(".")
+    return safe or "session"
+
+
 def session_dir(cwd: str | Path, run_name: str) -> Path:
     """Return ``<cwd>/.arbor/sessions/<run_name>`` (the per-run session root)."""
-    return Path(cwd).resolve() / ".arbor" / "sessions" / run_name
+    return Path(cwd).resolve() / ".arbor" / "sessions" / _safe_run_name(run_name)
 
 
 def coordinator_dir(cwd: str | Path, run_name: str) -> Path:
@@ -467,11 +480,21 @@ def worktree_create(
 
 
 def worktree_remove(cwd: str | Path, worktree: str | Path) -> dict[str, Any]:
-    """Force-remove a previously created experiment worktree."""
-    rc, out = git(cwd, "worktree", "remove", "--force", str(worktree))
+    """Force-remove a previously created experiment worktree.
+
+    The path comes from a tool call, so we refuse to ``rmtree`` anything that is
+    not strictly inside our per-user worktree scratch root — a purpose-specific
+    tool should never expose unbounded deletion, even though the host agent is
+    otherwise trusted.
+    """
+    wt = Path(worktree).resolve()
+    base = _worktree_base("worktrees").resolve()
+    if base not in wt.parents:
+        raise ValueError(f"refusing to remove a worktree outside {base}: {wt}")
+    rc, out = git(cwd, "worktree", "remove", "--force", str(wt))
     # Clear any leftover directory git did not remove (e.g. an orphaned path).
-    shutil.rmtree(Path(worktree), ignore_errors=True)
-    return {"removed": str(worktree), "returncode": rc, "output": out}
+    shutil.rmtree(wt, ignore_errors=True)
+    return {"removed": str(wt), "returncode": rc, "output": out}
 
 
 # ── Guarded merge ─────────────────────────────────────────────────────────────

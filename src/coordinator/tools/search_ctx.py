@@ -161,7 +161,7 @@ async def wait_for_pending_searches(timeout: float | None = None) -> int:
 
 # Moved to _agent_recover (shared with the research lane). Re-exported here so
 # existing importers (e.g. cli/commands/idea_check_cmd.py) keep working.
-from ._agent_recover import _extract_json_block, recover_json  # noqa: E402
+from ._agent_recover import _extract_json_block, recover_json  # noqa: E402,F401
 
 
 def _render_markdown(parsed: dict[str, Any]) -> str:

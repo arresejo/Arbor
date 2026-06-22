@@ -18,6 +18,11 @@ import arbor.search_agent.agent as sa_agent
 from arbor.coordinator.config import CoordinatorConfig, SearchConfig
 from arbor.coordinator.idea_tree import IdeaTree, Node
 from arbor.coordinator.tools import get_coordinator_tools
+from arbor.coordinator.tools._agent_recover import (
+    filter_sources_to_visited,
+    recover_json,
+    visited_urls,
+)
 from arbor.coordinator.tools.research_ctx import ResearchSearchTool
 from arbor.coordinator.tools.tree_ops import TreeAddNodeTool
 
@@ -238,13 +243,6 @@ def test_grounding_and_related_work_are_independent_fields():
 
 
 # ── agent-output recovery + visited-source filtering ─────────────────────────
-
-from arbor.coordinator.tools._agent_recover import (
-    filter_sources_to_visited,
-    recover_json,
-    visited_urls,
-)
-
 
 class _AgentStub:
     """Minimal stand-in exposing the normalized transcript the Agent records."""

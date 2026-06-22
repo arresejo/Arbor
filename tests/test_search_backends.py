@@ -7,10 +7,8 @@ faked via ``ax._load_axv``.
 from __future__ import annotations
 
 import asyncio
-from types import SimpleNamespace
 
 import arbor.core.tools.web.backends as B
-from arbor.core.tools.web import alphaxiv as ax
 from arbor.core.tools.web.backends import (
     ExaBackend,
     JinaSearchBackend,

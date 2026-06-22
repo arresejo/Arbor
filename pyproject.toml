@@ -44,7 +44,7 @@ mcp = [
 # `alphaxiv-py` requires Python >= 3.12; kept optional so the base install
 # stays on Python >= 3.10 — install with `pip install arbor-agent[search]`.
 search = [
-    "alphaxiv-py>=0.6.0",
+    "alphaxiv-py>=0.6.0; python_version >= '3.12'",
 ]
 
 [project.scripts]

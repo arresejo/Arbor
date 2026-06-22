@@ -278,3 +278,28 @@ def test_worktree_create_recovers_when_branch_already_exists(tmp_path: Path) -> 
     assert second["branch"] != "exp/dup"  # recovered under a unique suffix
     assert Path(second["worktree"]).is_dir()
     ops.worktree_remove(repo, second["worktree"])
+
+
+# ── path-boundary hardening (security review follow-up) ───────────────────────
+
+
+def test_session_dir_rejects_path_traversal(tmp_path: Path) -> None:
+    """A crafted run_name must never escape ``<cwd>/.arbor/sessions/``."""
+    sessions = (tmp_path / ".arbor" / "sessions").resolve()
+    for bad in ("../../etc", "/etc/passwd", "..", ".", "a/../../b", "....//"):
+        resolved = ops.session_dir(tmp_path, bad).resolve()
+        assert sessions in resolved.parents, f"{bad!r} escaped to {resolved}"
+    # A normal name is preserved verbatim.
+    assert ops.session_dir(tmp_path, "my-run_1.2").name == "my-run_1.2"
+
+
+def test_worktree_remove_refuses_paths_outside_scratch(tmp_path: Path) -> None:
+    """worktree_remove must not rmtree a path outside the worktree scratch root."""
+    victim = tmp_path / "precious"
+    victim.mkdir()
+    (victim / "keep.txt").write_text("do not delete", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="outside"):
+        ops.worktree_remove(tmp_path, victim)
+
+    assert victim.is_dir() and (victim / "keep.txt").exists()  # untouched
